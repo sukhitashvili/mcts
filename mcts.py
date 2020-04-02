@@ -1,7 +1,7 @@
-from abc import abstractmethod
+from abc import ABCMeta, abstractmethod, ABC
 
 
-class MCTS:
+class MCTS(metaclass=ABCMeta):
     def __init__(self):
         self.node_counet = 0  # counts the nodes on the tree
         self.node_tree = []  # list that should contain all the nodes
@@ -38,3 +38,19 @@ class MCTS:
         :return: None.
         """
         raise NotImplementedError
+
+
+class RootNode(MCTS, ABC):
+    def __init__(self):
+        super().__init__()
+
+
+class Node(MCTS, ABC):
+    def __init__(self):
+        super().__init__()
+        self.node_counet += 1
+
+
+if __name__ == '__main__':
+    n = RootNode()
+    print(n)
