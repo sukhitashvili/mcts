@@ -15,4 +15,8 @@ while not done:
     # find out the move of MCTS
     node = Node(node_tree=NODE_TREE_DICT, game=game)
     node_tree, node_path = search(NODE_TREE_DICT)
+    node_tree['unexplored_actions'] = game.empty_moves()
+
+    node.expand(node_tree)
+    # update the scores
 

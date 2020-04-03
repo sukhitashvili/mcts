@@ -5,7 +5,8 @@ from tictoctoe import TicTocToe
 NODE_TREE_DICT = dict()  # node_tree_dict -> {'node_name': 'node_1', 'children': [{}, {}, ...], 'score': float, 'n': int, 'unexplored_actions': [action_1, action_2, ...]}
 NODE_TREE_DICT['node_name'] = 'node_1'
 # NODE_TREE_DICT['children'] = []
-NODE_TREE_DICT['score'] = 0
+NODE_TREE_DICT['node_score'] = 0
+NODE_TREE_DICT['total_score'] = 0
 NODE_TREE_DICT['n'] = 0
 NODE_TREE_DICT['unexplored_actions'] = []
 
@@ -92,13 +93,11 @@ class Node(MCTS, ABC):
                 if not done:
                     score = self.simulate(game, self.node_tree['unexplored_actions'], repeat=50)
                 # create a new child node with stats
-                child = {'score': score,
+                child = {'node_score': score,
+                         'total_score': score,  # when node does not have children its score the the total score!
                          'n': 1,
                          'unexplored_actions': self.remove(self.node_tree['unexplored_actions'], action),
                          'node_name': action}
                 children.append(child)
             self.node_tree['unexplored_actions'] = []  # after all actions has been explored in the node!
             self.node_tree['children'] = children
-            self.node_tree['score'] = self.node_tree['score'] / self.node_tree['score']
-        else:
-            return None
