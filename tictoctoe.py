@@ -13,9 +13,9 @@ board['1'] = ' '
 
 
 class TicTocToe:
-    def __init__(self, my_board=board):
-        self.board = my_board
-        self.turn = 'X'
+    def __init__(self, game_board=board, turn='X'):
+        self.board = game_board
+        self.turn = turn
         self.count = 0
 
     def render(self):
@@ -49,7 +49,7 @@ class TicTocToe:
             print("That place is already filled.\nMove to which place?")
 
         # Now we will check if player X or O has won,for every move after 5 moves.
-        if self.count >= 5:
+        if self.count >= 0:  # 5
             if self.board['7'] == self.board['8'] == self.board['9'] != ' ':  # across the top
                 self.render()
                 print("\nGame Over.\n")
