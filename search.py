@@ -70,9 +70,10 @@ def search(node_tree_dict):
         if children in node_tree.keys():
             children_list = node_tree[children]
             # if node does not have children then 'n' wont be increased!
-            j = [] if j == -1 else [j]
-            _ = set_value_by_path(node_tree_dict, node_path + j + ['n'],
-                                  (parent_n + 1))  # if a node passed take into account that
+            parent_path = [] if j == -1 else node_path
+            # if a node passed take into account that
+            _ = set_value_by_path(node_tree_dict, parent_path + ['n'], (parent_n + 1))
+
         else:
             node_path = None if counter == 0 else node_path
             return node_tree, node_path  # if key error return current node
@@ -80,5 +81,3 @@ def search(node_tree_dict):
         node_path.append(children)
         node_path.append(j)
         counter += 1
-
-    return node_tree, node_path

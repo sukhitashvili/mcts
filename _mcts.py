@@ -49,6 +49,7 @@ class Node(MCTS, ABC):
         self.game = game
         self.action_size = len(self.node_tree['unexplored_actions'])
         if self.action_size == 0:  # if actions left, execute them and then simulate!
+            print('node_tree', self.node_tree)
             raise RuntimeError('there are 0 action left!')
         # find out whose turn it is
         node_path_len = len(node_path) // 2 if node_path else 0

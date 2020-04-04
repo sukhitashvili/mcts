@@ -5,7 +5,7 @@ from tictoctoe import TicTocToe
 import copy
 import numpy as np
 
-MCTS_STEPS = 3
+MCTS_STEPS = 50
 
 game = TicTocToe()
 done = False
@@ -33,6 +33,9 @@ while not done:
     for i in range(MCTS_STEPS):
         node_tree, node_path = search(copy_of_NODE_TREE_DICT)
         # mcts
+        if node_tree['unexplored_actions'] == []:
+            node_tree['n'] += 1  # after some increases selection of the node will stop and exploration will continue
+            continue
         node = Node(node_tree=node_tree, game=game, node_path=node_path)
         node.expand()
         # update the scores
