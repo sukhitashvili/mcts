@@ -5,7 +5,7 @@ from tictoctoe import TicTocToe
 import copy
 import numpy as np
 
-MCTS_STEPS = 150
+MCTS_STEPS = 2
 
 game = TicTocToe()
 done = False
@@ -29,9 +29,12 @@ while not done:
     unexplored_actions = game.empty_moves()
     if len(unexplored_actions) > 1:
         copy_of_NODE_TREE_DICT['unexplored_actions'] = unexplored_actions
-        for _ in range(MCTS_STEPS):
+        for i in range(MCTS_STEPS):
             node_tree, node_path = search(copy_of_NODE_TREE_DICT)
             if len(node_tree['unexplored_actions']) == 1:
+                # update the scores of 'n' and total score bcz of changes in 'n' when selecting node
+                copy_of_NODE_TREE_DICT = join_trees(copy_of_NODE_TREE_DICT, node_path, node_tree)
+                backprop(copy_of_NODE_TREE_DICT, node_path)
                 continue
             # mcts
             node = Node(node_tree=node_tree, game=game)

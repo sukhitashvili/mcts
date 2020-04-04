@@ -96,7 +96,7 @@ class TicTocToe:
             return True
 
         # check if all states are filled
-        if self.count == 9:
+        if self.count >= 9:
             return 'tie'
 
         # Now we have to change the player after every move.

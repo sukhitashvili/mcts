@@ -3,7 +3,7 @@ import random
 from tictoctoe import TicTocToe
 
 NODE_TREE_DICT = dict()  # node_tree_dict -> {'node_name': 'node_1', 'children': [{}, {}, ...], 'score': float, 'n': int, 'unexplored_actions': [action_1, action_2, ...]}
-NODE_TREE_DICT['node_name'] = 'node_1'
+NODE_TREE_DICT['node_name'] = 'root_node'
 # NODE_TREE_DICT['children'] = []
 NODE_TREE_DICT['node_score'] = 0
 NODE_TREE_DICT['total_score'] = 0
@@ -24,7 +24,7 @@ class MCTS(metaclass=ABCMeta):
     #     raise NotImplementedError
 
     @abstractmethod
-    def simulate(self, game, first_action, possible_actions: list, repeat: int = 1):
+    def simulate(self, first_action, possible_actions: list, repeat: int = 1):
         raise NotImplementedError
 
     # @abstractmethod
@@ -62,30 +62,33 @@ class Node(MCTS, ABC):
         action_list.remove(action)
         return action, action_list
 
-    def simulate(self, game, first_action, possible_actions: list, repeat: int = 1):
+    def simulate(self, first_action, possible_actions: list, repeat: int = 1):
         won = 0
-        # firstly execute first action and see what happens!
-        # here we do not need the 'repeat' loop, if game ends in one step
-        # the same result will be performed every time, bcz our game is not stochastic.
-        done = game.step(first_action, simulation=True)
-        if done and not (done == 'tie'):
-            winner = game.turn
-            if winner == self.game.turn:  # if winner is the same whose turn was first!
-                won += 1
-                return won
-            else:  # if first player loss!
-                won -= 1
-                return won
-        elif done:  # if ended tie!
-            won += 0
-            return won
-
         # now execute left actions!
         for i in range(repeat):
+            # init the game
+            game = TicTocToe(game_board=self.game.board.copy(), turn=self.game.turn, count=self.game.count)
+            done = game.step(first_action, simulation=True)
+            if done and not (done == 'tie'):
+                winner = game.turn
+                if winner == self.game.turn:  # if winner is the same whose turn was first!
+                    won += 1
+                    return won
+                else:  # if first player loss!
+                    won -= 1
+                    return won
+            elif done:  # if ended tie!
+                won += 0
+                return won
+
+            # random simulation of play
             actions = possible_actions.copy()
             while not done:
+                print(actions)
                 move, actions = self.default_polocy(actions)
                 done = game.step(move, simulation=True)
+                print(done)
+                game.render()
                 if done and not (done == 'tie'):
                     winner = game.turn
                     if winner == self.game.turn:  # if winner is the same whose turn was first!
@@ -107,9 +110,8 @@ class Node(MCTS, ABC):
             children = []
             for action in self.node_tree['unexplored_actions']:
                 self.node_tree['n'] += 1
-                game = TicTocToe(game_board=self.game.board.copy(), turn=self.game.turn, count=self.game.count)
                 possible_actions = self.remove(self.node_tree['unexplored_actions'], action)
-                score = self.simulate(game, action, possible_actions, repeat=200)
+                score = self.simulate(action, possible_actions, repeat=1)
                 # create a new child node with stats
                 child = {'node_score': score,
                          'total_score': score,  # when node does not have children its score the the total score!

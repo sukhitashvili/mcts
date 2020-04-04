@@ -50,8 +50,11 @@ if __name__ == '__main__':
                        {'r': 666}
                    ]},
                   {'A': 777}
-              ]},
+              ],
+              'n': 0},
              {'c': 666}
-         ]}
-    print((check_tree_depth(d)))
-    # print(set_value_by_path(d, ['children', 0, 'children', 1], {'AAA': 777}))
+         ],
+         'n': 0}
+    # print((check_tree_depth(d)))
+    path = ['children'] + [0] + ['n']
+    print(set_value_by_path(d, path, get_value_by_path(d, path) + 1))
