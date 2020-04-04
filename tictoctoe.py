@@ -33,6 +33,12 @@ class TicTocToe:
             print('empty moves: ', self.empty_moves())
             move = input()
             done = self.step(move)
+            if done and not (done == 'tie'):
+                self.render()
+            else:
+                self.render()
+                print("\nGame Over.\n")
+                print("****  Tie!  ****")
 
     def empty_moves(self):
         moves = []
@@ -49,45 +55,42 @@ class TicTocToe:
             print("That place is already filled.\nMove to which place?")
 
         if self.board['7'] == self.board['8'] == self.board['9'] != ' ':  # across the top
-            self.render()
             print("\nGame Over.\n")
             print(" **** " + self.turn + " won. ****")
             return True
         elif self.board['4'] == self.board['5'] == self.board['6'] != ' ':  # across the middle
-            self.render()
             print("\nGame Over.\n")
             print(" **** " + self.turn + " won. ****")
             return True
         elif self.board['1'] == self.board['2'] == self.board['3'] != ' ':  # across the bottom
-            self.render()
             print("\nGame Over.\n")
             print(" **** " + self.turn + " won. ****")
             return True
         elif self.board['1'] == self.board['4'] == self.board['7'] != ' ':  # down the left side
-            self.render()
             print("\nGame Over.\n")
             print(" **** " + self.turn + " won. ****")
             return True
         elif self.board['2'] == self.board['5'] == self.board['8'] != ' ':  # down the middle
-            self.render()
             print("\nGame Over.\n")
             print(" **** " + self.turn + " won. ****")
             return True
         elif self.board['3'] == self.board['6'] == self.board['9'] != ' ':  # down the right side
-            self.render()
             print("\nGame Over.\n")
             print(" **** " + self.turn + " won. ****")
             return True
         elif self.board['7'] == self.board['5'] == self.board['3'] != ' ':  # diagonal
-            self.render()
             print("\nGame Over.\n")
             print(" **** " + self.turn + " won. ****")
             return True
         elif self.board['1'] == self.board['5'] == self.board['9'] != ' ':  # diagonal
-            self.render()
             print("\nGame Over.\n")
             print(" **** " + self.turn + " won. ****")
             return True
+
+        # check if all states are filled
+        if self.count == 9:
+            return 'tie'
+
         # Now we have to change the player after every move.
         if self.turn == 'X':
             self.turn = 'O'
