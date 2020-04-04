@@ -37,7 +37,7 @@ while not done:
                 backprop(copy_of_NODE_TREE_DICT, node_path)
                 continue
             # mcts
-            node = Node(node_tree=node_tree, game=game)
+            node = Node(node_tree=node_tree, game=game, node_path=node_path)
             node.expand()
             # update the scores
             copy_of_NODE_TREE_DICT = join_trees(copy_of_NODE_TREE_DICT, node_path, node_tree)

@@ -25,6 +25,18 @@ class TicTocToe:
         print('-+-+-')
         print(self.board['1'] + '|' + self.board['2'] + '|' + self.board['3'])
 
+    def fill_board(self, unexplored_action_list):
+        '''
+        fill the board with played action to continue exploration of other tactics.
+        :param unexplored_action_list: list of unexplored action
+        :return: modifies game board
+        '''
+        # for key in self.board.key():
+        #     if key not in unexplored_action_list:
+        #         self.board
+
+
+
     def play(self):
         done = False
         while not done:
