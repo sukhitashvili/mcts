@@ -24,11 +24,7 @@ class MCTS(metaclass=ABCMeta):
     #     raise NotImplementedError
 
     @abstractmethod
-    def simulate(self, game, possible_actions: list, repeat: int = 1):
-        """
-        simulates game by randomly chosen action
-        :return:
-        """
+    def simulate(self, game, first_action, possible_actions: list, repeat: int = 1):
         raise NotImplementedError
 
     # @abstractmethod
@@ -40,10 +36,9 @@ class MCTS(metaclass=ABCMeta):
     #     raise NotImplementedError
 
     @abstractmethod
-    def expand(self, node_tree):
+    def expand(self):
         """
         expands node tree or exploits left actions.
-        :param node_tree: dict of child node of MCTS
         :return: children nodes list that should be added to NODE_TREE_DICT into proper place.
         """
         raise NotImplementedError
@@ -67,11 +62,28 @@ class Node(MCTS, ABC):
         action_list.remove(action)
         return action, action_list
 
-    def simulate(self, game, possible_actions: list, repeat: int = 1):
+    def simulate(self, game, first_action, possible_actions: list, repeat: int = 1):
         won = 0
+        # firstly execute first action and see what happens!
+        # here we do not need the 'repeat' loop, if game ends in one step
+        # the same result will be performed every time, bcz our game is not stochastic.
+        done = game.step(first_action)
+        if done and not (done == 'tie'):
+            winner = game.turn
+            if winner == self.game.turn:  # if winner is the same whose turn was first!
+                won += 1
+                return won
+            else:  # if first player loss!
+                won -= 0.1
+                return won
+
+        elif done:  # if ended tie!
+            won += 0
+            return won
+
+        # now execute left actions!
         for i in range(repeat):
             actions = possible_actions.copy()
-            done = False
             while not done:
                 move, actions = self.default_polocy(actions)
                 done = game.step(move)
@@ -79,24 +91,25 @@ class Node(MCTS, ABC):
                     winner = game.turn
                     if winner == self.game.turn:  # if winner is the same whose turn was first!
                         won += 1
+                        break
                     else:  # if first player loss!
                         won -= 0.1
+                        break
 
-                else:  # if ended tie!
+                elif done:  # if ended tie!
                     won += 0
+                    break
 
         return won / repeat
 
-    def expand(self, node_tree):
+    def expand(self):
         if len(self.node_tree['unexplored_actions']) != 0:  # if actions left, execute them and then simulate!
             children = []
             for action in self.node_tree['unexplored_actions']:
                 self.node_tree['n'] += 1
                 game = TicTocToe(game_board=self.game.board.copy(), turn=self.game.turn)
-                done = game.step(action)
-                score = 0
-                if not done:
-                    score = self.simulate(game, self.node_tree['unexplored_actions'], repeat=50)
+                possible_actions = self.remove(self.node_tree['unexplored_actions'], action)
+                score = self.simulate(game, possible_actions, repeat=1)
                 # create a new child node with stats
                 child = {'node_score': score,
                          'total_score': score,  # when node does not have children its score the the total score!

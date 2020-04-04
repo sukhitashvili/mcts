@@ -35,7 +35,7 @@ class TicTocToe:
             done = self.step(move)
             if done and not (done == 'tie'):
                 self.render()
-            else:
+            elif done:
                 self.render()
                 print("\nGame Over.\n")
                 print("****  Tie!  ****")

@@ -4,7 +4,21 @@ import copy
 C = 2  # exploration factor constant, the higher it is the more exploration is done
 
 
-def search_best_node(children_list, parent_n):
+def select_best_action(node_tree_dict):
+    children_list = node_tree_dict['children']
+    best_child = None
+    best_score = np.float('-inf')
+    for i, child in enumerate(children_list):
+        child_score = child['total_score']
+        # below I don't use upper confidence bound heuristic
+        if child_score >= best_score:
+            best_score = child_score
+            best_child = child
+    # return best action
+    return best_child['node_name']
+
+
+def select_node_for_expansion(children_list, parent_n):
     best_child = None
     best_score = np.float('-inf')
     j = None
@@ -31,7 +45,7 @@ def search(node_tree_dict):
             node_tree['n'] += 1  # if a node passed take into account that
         except KeyError:
             return node_tree, None  # if key error return current node
-        node_tree, j = search_best_node(children_list, parent_n)
+        node_tree, j = select_node_for_expansion(children_list, parent_n)
         node_path.append(children)
         node_path.append(j)
 
