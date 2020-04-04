@@ -5,7 +5,7 @@ from tictoctoe import TicTocToe
 import copy
 import numpy as np
 
-MCTS_STEPS = 50
+MCTS_STEPS = 20
 
 game = TicTocToe()
 done = False
