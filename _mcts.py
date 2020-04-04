@@ -48,8 +48,8 @@ class Node(MCTS, ABC):
         self.node_tree = node_tree
         self.game = game
         self.action_size = len(self.node_tree['unexplored_actions'])
-        if not self.action_size > 1:  # if actions left, execute them and then simulate!
-            raise RuntimeError('left actions must be more then 1')
+        if self.action_size == 0:  # if actions left, execute them and then simulate!
+            raise RuntimeError('there are 0 action left!')
         # find out whose turn it is
         node_path_len = len(node_path) // 2 if node_path else 0
         if node_path_len % 2:  # when odd it's second player's turn
@@ -94,9 +94,6 @@ class Node(MCTS, ABC):
             while not done:
                 move, actions = self.default_polocy(actions)
                 done = game.step(move, simulation=True)
-                print(actions)
-                print(done)
-                game.render()
                 if done and not (done == 'tie'):
                     winner = game.turn
                     if winner == self.game.turn:  # if the winner is the same whose turn is in real game!
