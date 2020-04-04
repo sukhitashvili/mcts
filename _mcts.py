@@ -75,10 +75,15 @@ class Node(MCTS, ABC):
             while not done:
                 move, actions = self.default_polocy(actions)
                 done = game.step(move)
-                if done:
+                if done and not (done == 'tie'):
                     winner = game.turn
-                    if winner == self.game.turn:  # if winner is the same whose turn was firstly!
+                    if winner == self.game.turn:  # if winner is the same whose turn was first!
                         won += 1
+                    else:  # if first player loss!
+                        won -= 0.1
+
+                else:  # if ended tie!
+                    won += 0
 
         return won / repeat
 
