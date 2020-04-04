@@ -92,7 +92,7 @@ class Node(MCTS, ABC):
                         won += 1
                         break
                     else:  # if first player loss!
-                        won -= 2
+                        won -= 1
                         break
 
                 elif done:  # if ended tie!
@@ -102,13 +102,14 @@ class Node(MCTS, ABC):
         return won / repeat
 
     def expand(self):
-        if len(self.node_tree['unexplored_actions']) != 0:  # if actions left, execute them and then simulate!
+        action_size = len(self.node_tree['unexplored_actions'])
+        if action_size != 0 and action_size > 1:  # if actions left, execute them and then simulate!
             children = []
             for action in self.node_tree['unexplored_actions']:
                 self.node_tree['n'] += 1
                 game = TicTocToe(game_board=self.game.board.copy(), turn=self.game.turn, count=self.game.count)
                 possible_actions = self.remove(self.node_tree['unexplored_actions'], action)
-                score = self.simulate(game, action, possible_actions, repeat=50)
+                score = self.simulate(game, action, possible_actions, repeat=200)
                 # create a new child node with stats
                 child = {'node_score': score,
                          'total_score': score,  # when node does not have children its score the the total score!

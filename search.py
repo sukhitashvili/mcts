@@ -23,6 +23,7 @@ def select_node_for_expansion(children_list, parent_n):
     best_score = np.float('-inf')
     j = None
     for i, child in enumerate(children_list):
+
         child_score = child['total_score']
         child_score += C * np.sqrt(2 * np.log(parent_n) / child['n'])  # upper confidence bound heuristic
         if child_score >= best_score:

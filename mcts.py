@@ -5,8 +5,7 @@ from tictoctoe import TicTocToe
 import copy
 import numpy as np
 
-
-MCTS_STEPS = 220
+MCTS_STEPS = 150
 
 game = TicTocToe()
 done = False
@@ -27,20 +26,28 @@ while not done:
     # find out the move of MCTS
     tree_lenght = []
     copy_of_NODE_TREE_DICT = copy.deepcopy(NODE_TREE_DICT)
-    for _ in range(MCTS_STEPS):
-        node_tree, node_path = search(copy_of_NODE_TREE_DICT)
-        node_tree['unexplored_actions'] = game.empty_moves()
-        # mcts
-        node = Node(node_tree=node_tree, game=game)
-        node.expand()
-        # update the scores
-        copy_of_NODE_TREE_DICT = join_trees(copy_of_NODE_TREE_DICT, node_path, node_tree)
-        backprop(copy_of_NODE_TREE_DICT, node_path)
-        node_path = [] if not node_path else node_path
-        tree_lenght.append(len(node_path) // 2)
+    unexplored_actions = game.empty_moves()
+    if len(unexplored_actions) > 1:
+        copy_of_NODE_TREE_DICT['unexplored_actions'] = unexplored_actions
+        for _ in range(MCTS_STEPS):
+            node_tree, node_path = search(copy_of_NODE_TREE_DICT)
+            if len(node_tree['unexplored_actions']) == 1:
+                continue
+            # mcts
+            node = Node(node_tree=node_tree, game=game)
+            node.expand()
+            # update the scores
+            copy_of_NODE_TREE_DICT = join_trees(copy_of_NODE_TREE_DICT, node_path, node_tree)
+            backprop(copy_of_NODE_TREE_DICT, node_path)
+            node_path = [] if not node_path else node_path
+            tree_lenght.append(len(node_path) // 2)
+        # select best action from copy_of_NODE_TREE_DICT and execute it!
+        action = select_best_action(copy_of_NODE_TREE_DICT)
+        print('tree grain -', np.mean(tree_lenght))
 
-    print('tree grain -', np.mean(tree_lenght))
-    # select best action from copy_of_NODE_TREE_DICT and execute it!
+    else:  # one possible action left then execute it!
+        action = unexplored_actions[0]
+
     action = select_best_action(copy_of_NODE_TREE_DICT)
     done = game.step(action)
     if done and not (done == 'tie'):
