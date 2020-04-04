@@ -67,16 +67,15 @@ class Node(MCTS, ABC):
         # firstly execute first action and see what happens!
         # here we do not need the 'repeat' loop, if game ends in one step
         # the same result will be performed every time, bcz our game is not stochastic.
-        done = game.step(first_action)
+        done = game.step(first_action, simulation=True)
         if done and not (done == 'tie'):
             winner = game.turn
             if winner == self.game.turn:  # if winner is the same whose turn was first!
                 won += 1
                 return won
             else:  # if first player loss!
-                won -= 0.1
+                won -= 1
                 return won
-
         elif done:  # if ended tie!
             won += 0
             return won
@@ -86,14 +85,14 @@ class Node(MCTS, ABC):
             actions = possible_actions.copy()
             while not done:
                 move, actions = self.default_polocy(actions)
-                done = game.step(move)
+                done = game.step(move, simulation=True)
                 if done and not (done == 'tie'):
                     winner = game.turn
                     if winner == self.game.turn:  # if winner is the same whose turn was first!
                         won += 1
                         break
                     else:  # if first player loss!
-                        won -= 0.1
+                        won -= 2
                         break
 
                 elif done:  # if ended tie!
@@ -107,14 +106,14 @@ class Node(MCTS, ABC):
             children = []
             for action in self.node_tree['unexplored_actions']:
                 self.node_tree['n'] += 1
-                game = TicTocToe(game_board=self.game.board.copy(), turn=self.game.turn)
+                game = TicTocToe(game_board=self.game.board.copy(), turn=self.game.turn, count=self.game.count)
                 possible_actions = self.remove(self.node_tree['unexplored_actions'], action)
-                score = self.simulate(game, possible_actions, repeat=1)
+                score = self.simulate(game, action, possible_actions, repeat=50)
                 # create a new child node with stats
                 child = {'node_score': score,
                          'total_score': score,  # when node does not have children its score the the total score!
                          'n': 1,
-                         'unexplored_actions': self.remove(self.node_tree['unexplored_actions'], action),
+                         'unexplored_actions': possible_actions,
                          'node_name': action}
                 children.append(child)
             self.node_tree['unexplored_actions'] = []  # after all actions has been explored in the node!

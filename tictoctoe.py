@@ -13,10 +13,10 @@ board['1'] = ' '
 
 
 class TicTocToe:
-    def __init__(self, game_board=board, turn='X'):
+    def __init__(self, game_board=board, turn='X', count: int = 0):
         self.board = game_board
         self.turn = turn
-        self.count = 0
+        self.count = count
 
     def render(self):
         print(self.board['7'] + '|' + self.board['8'] + '|' + self.board['9'])
@@ -47,7 +47,7 @@ class TicTocToe:
                 moves.append(key)
         return moves
 
-    def step(self, move):
+    def step(self, move, simulation=False):
         if self.board[move] == ' ':
             self.board[move] = self.turn
             self.count += 1
@@ -55,36 +55,44 @@ class TicTocToe:
             print("That place is already filled.\nMove to which place?")
 
         if self.board['7'] == self.board['8'] == self.board['9'] != ' ':  # across the top
-            print("\nGame Over.\n")
-            print(" **** " + self.turn + " won. ****")
+            if not simulation:
+                print("\nGame Over.\n")
+                print(" **** " + self.turn + " won. ****")
             return True
         elif self.board['4'] == self.board['5'] == self.board['6'] != ' ':  # across the middle
-            print("\nGame Over.\n")
-            print(" **** " + self.turn + " won. ****")
+            if not simulation:
+                print("\nGame Over.\n")
+                print(" **** " + self.turn + " won. ****")
             return True
         elif self.board['1'] == self.board['2'] == self.board['3'] != ' ':  # across the bottom
-            print("\nGame Over.\n")
-            print(" **** " + self.turn + " won. ****")
+            if not simulation:
+                print("\nGame Over.\n")
+                print(" **** " + self.turn + " won. ****")
             return True
         elif self.board['1'] == self.board['4'] == self.board['7'] != ' ':  # down the left side
-            print("\nGame Over.\n")
-            print(" **** " + self.turn + " won. ****")
+            if not simulation:
+                print("\nGame Over.\n")
+                print(" **** " + self.turn + " won. ****")
             return True
         elif self.board['2'] == self.board['5'] == self.board['8'] != ' ':  # down the middle
-            print("\nGame Over.\n")
-            print(" **** " + self.turn + " won. ****")
+            if not simulation:
+                print("\nGame Over.\n")
+                print(" **** " + self.turn + " won. ****")
             return True
         elif self.board['3'] == self.board['6'] == self.board['9'] != ' ':  # down the right side
-            print("\nGame Over.\n")
-            print(" **** " + self.turn + " won. ****")
+            if not simulation:
+                print("\nGame Over.\n")
+                print(" **** " + self.turn + " won. ****")
             return True
         elif self.board['7'] == self.board['5'] == self.board['3'] != ' ':  # diagonal
-            print("\nGame Over.\n")
-            print(" **** " + self.turn + " won. ****")
+            if not simulation:
+                print("\nGame Over.\n")
+                print(" **** " + self.turn + " won. ****")
             return True
         elif self.board['1'] == self.board['5'] == self.board['9'] != ' ':  # diagonal
-            print("\nGame Over.\n")
-            print(" **** " + self.turn + " won. ****")
+            if not simulation:
+                print("\nGame Over.\n")
+                print(" **** " + self.turn + " won. ****")
             return True
 
         # check if all states are filled

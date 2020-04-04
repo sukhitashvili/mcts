@@ -1,4 +1,25 @@
 from functools import reduce
+from copy import deepcopy
+
+
+def check_tree_depth(tree):
+    depth = 1
+    t = deepcopy(tree)
+    for i in range(500):
+        try:
+            c_l = t['children']
+            no_child = 1
+            for c in c_l:
+                if 'children' in c.keys():
+                    t = deepcopy(c)
+                    no_child = 0
+                    break
+            if no_child:
+                break
+            depth += 1
+        except:
+            break
+    return depth
 
 
 def get_func(obj, key):
@@ -12,9 +33,25 @@ def get_value_by_path(container, path):
 def set_value_by_path(container, path, value):
     obj = reduce(get_func, path[:-1], container)
     obj.__setitem__(path[-1], value)
+    return container
 
 
 if __name__ == '__main__':
-    d = {'a': [{'b': 777}, {'bb': 888}]}
-    a = get_value_by_path(d, ['a', 0])
-    print(a)
+    d = {'a': 666,
+         'children': [
+             {'b': 666,
+              'children': [
+                  {'a': 666,
+                   'children': [
+                       {'c': 666,
+                        'children': [
+                            {'a': 777}
+                        ]},
+                       {'r': 666}
+                   ]},
+                  {'A': 777}
+              ]},
+             {'c': 666}
+         ]}
+    print((check_tree_depth(d)))
+    # print(set_value_by_path(d, ['children', 0, 'children', 1], {'AAA': 777}))

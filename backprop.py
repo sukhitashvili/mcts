@@ -4,9 +4,11 @@ from helpers import set_value_by_path, get_value_by_path
 
 def join_trees(node_tree_dict, node_path, node_tree):
     if node_path:
-        set_value_by_path(node_tree_dict, node_path, node_tree)  # replaces an old child node by new one with children!
+        node_tree_dict = set_value_by_path(node_tree_dict, node_path, node_tree)  # replaces an old child node by new one with children!
+        return node_tree_dict
     else:
         node_tree_dict = node_tree  # if root node then keep it
+        return node_tree_dict
 
 
 def backprop(node_tree_dict, node_path):
