@@ -29,6 +29,8 @@ while not done:
     unexplored_actions = game.empty_moves()
     if len(unexplored_actions) > 1:
         copy_of_NODE_TREE_DICT['unexplored_actions'] = unexplored_actions
+        copy_of_NODE_TREE_DICT['board'] = game.board
+
         for i in range(MCTS_STEPS):
             node_tree, node_path = search(copy_of_NODE_TREE_DICT)
             if len(node_tree['unexplored_actions']) == 1:

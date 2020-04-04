@@ -1,6 +1,7 @@
 from abc import ABCMeta, abstractmethod, ABC
 import random
 from tictoctoe import TicTocToe
+from _collections import OrderedDict
 
 NODE_TREE_DICT = dict()  # node_tree_dict -> {'node_name': 'node_1', 'children': [{}, {}, ...], 'score': float, 'n': int, 'unexplored_actions': [action_1, action_2, ...]}
 NODE_TREE_DICT['node_name'] = 'root_node'
@@ -9,6 +10,7 @@ NODE_TREE_DICT['node_score'] = 0
 NODE_TREE_DICT['total_score'] = 0
 NODE_TREE_DICT['n'] = 0
 NODE_TREE_DICT['unexplored_actions'] = []
+NODE_TREE_DICT['board'] = OrderedDict()
 
 
 class MCTS(metaclass=ABCMeta):
@@ -72,7 +74,7 @@ class Node(MCTS, ABC):
         # now execute left actions!
         for i in range(repeat):
             # init the game
-            game = TicTocToe(game_board=self.game.board.copy(), turn=self.simulation_turn,
+            game = TicTocToe(game_board=self.node_tree['board'].copy(), turn=self.simulation_turn,
                              count=(9 - self.action_size))
             done = game.step(first_action, simulation=True)
             if done and not (done == 'tie'):
@@ -117,10 +119,13 @@ class Node(MCTS, ABC):
             possible_actions = self.remove(self.node_tree['unexplored_actions'], action)
             score = self.simulate(action, possible_actions, repeat=1)
             # create a new child node with stats
+            child_board = self.node_tree['board'].copy()
+            child_board[action] = self.simulation_turn
             child = {'node_score': score,
                      'total_score': score,  # when node does not have children its score the the total score!
                      'n': 1,
                      'unexplored_actions': possible_actions,
+                     'board': child_board,
                      'node_name': action}
             children.append(child)
         self.node_tree['unexplored_actions'] = []  # after all actions has been explored in the node!
