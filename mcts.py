@@ -12,7 +12,6 @@ done = False
 while not done:
     game.render()
     print("It's your turn, " + game.turn + ". Move to which place?")
-    print('empty moves: ', game.empty_moves())
     move = input()
     done = game.step(move)
     game.render()
