@@ -201,7 +201,7 @@ class Node(MCTS, ABC):
         for action in self.node_tree['unexplored_actions']:
             self.node_tree['n'] += 1
             possible_actions = self.remove(self.node_tree['unexplored_actions'], action)
-            score = self.simulate(action, possible_actions, repeat=50)
+            score = self.simulate(action, possible_actions, repeat=100)
             # create a new child node with stats
             child_board = self.node_tree['board'].copy()
             child_board[action] = self.simulation_turn
