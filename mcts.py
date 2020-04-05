@@ -6,7 +6,7 @@ from helpers import get_value_by_path, set_value_by_path
 import numpy as np
 import copy
 
-C = 3  # exploration factor constant, the higher it is the more exploration is done
+C = 0.2  # exploration factor constant, the higher it is the more exploration is done
 
 NODE_TREE_DICT = dict()
 NODE_TREE_DICT['node_name'] = 'root_node'
@@ -170,7 +170,7 @@ class Node(MCTS, ABC):
                     won += 1
                     return won
                 else:  # if first player loss!
-                    won -= 1
+                    won -= 2
                     return won
             elif done:  # if ended tie!
                 won += 0
@@ -187,7 +187,7 @@ class Node(MCTS, ABC):
                         won += 1
                         break
                     else:  # if first player loss!
-                        won -= 1
+                        won -= 2
                         break
 
                 elif done:  # if ended tie!
