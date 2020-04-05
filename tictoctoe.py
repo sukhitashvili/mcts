@@ -52,7 +52,8 @@ class TicTocToe:
             self.board[move] = self.turn
             self.count += 1
         else:
-            print("That place is already filled.\nMove to which place?")
+            raise RuntimeError("That place is already filled!")
+            exit()
 
         if self.board['7'] == self.board['8'] == self.board['9'] != ' ':  # across the top
             if not simulation:

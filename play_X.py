@@ -20,7 +20,7 @@ while not done:
         print("****  Tie!  ****")
         break
 
-    print('Agent is thinking ...')
+    print("Agent's turn ...")
 
     # find out the move of MCTS
     copy_of_NODE_TREE_DICT = copy.deepcopy(NODE_TREE_DICT)
