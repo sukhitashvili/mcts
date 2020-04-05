@@ -1,4 +1,4 @@
-# Monte Carlo Tree Search for Tic Tac Toe game
+# Monte Carlo Tree Search for Tic-Tac-Toe game playing
 
 Python implementation of Monte Carlo Tree Search algorithm for Tic Tac Toe game playing.
 
